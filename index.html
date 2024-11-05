@@ -17,7 +17,7 @@
         .question.active {
             display: block;
         }
-        .option {
+        .option, .back-button {
             display: block;
             margin: 10px 0;
             padding: 10px;
@@ -25,8 +25,9 @@
             border: 1px solid #ccc;
             cursor: pointer;
             border-radius: 5px;
+            text-align: center;
         }
-        .option:hover {
+        .option:hover, .back-button:hover {
             background-color: #e0e0e0;
         }
         .final-message {
@@ -61,6 +62,7 @@
             <div class="option" onclick="recordAnswer('B', 'question3')">B) Clientes com valor contratual médio, tier 1.</div>
             <div class="option" onclick="recordAnswer('C', 'question3')">C) Clientes com alto valor contratual, tier 0.</div>
             <div class="option" onclick="recordAnswer('D', 'question3')">D) Clientes de alto valor contratual e/ou clientes estratégicos, tier S.</div>
+            <div class="back-button" onclick="goBack('question1')">Voltar</div>
         </div>
 
         <!-- Pergunta 3 -->
@@ -69,11 +71,13 @@
             <div class="option" onclick="recordAnswer('A', 'final')">A) Apenas o cliente que reportou</div>
             <div class="option" onclick="recordAnswer('B', 'final')">B) Um grupo menor de clientes</div>
             <div class="option" onclick="recordAnswer('C', 'final')">C) A maioria dos clientes</div>
+            <div class="back-button" onclick="goBack('question2')">Voltar</div>
         </div>
 
         <!-- Mensagem Final -->
         <div class="final-message" id="finalMessage">
             <p id="finalResponse"></p>
+            <div class="back-button" onclick="resetForm()">Responder Novamente</div>
         </div>
     </div>
 
@@ -98,6 +102,19 @@
             }
         }
 
+        function goBack(previousQuestionId) {
+            // Remove a última resposta do usuário
+            userAnswers.pop();
+
+            // Esconde a pergunta atual
+            const currentQuestion = document.querySelector('.question.active');
+            currentQuestion.classList.remove('active');
+
+            // Mostra a pergunta anterior
+            const previousQuestion = document.getElementById(previousQuestionId);
+            previousQuestion.classList.add('active');
+        }
+
         function displayFinalMessage() {
             // Lógica de orientação com base nas respostas
             let message;
@@ -115,6 +132,13 @@
             // Exibe a mensagem final
             document.getElementById('finalResponse').textContent = message;
             document.getElementById('finalMessage').style.display = 'block';
+        }
+
+        function resetForm() {
+            // Limpa as respostas e reinicia o formulário
+            userAnswers.length = 0;
+            document.getElementById('finalMessage').style.display = 'none';
+            document.querySelector('.question').classList.add('active');
         }
     </script>
 
