@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Questionário de Impacto e Criticidade do Cliente</title>
+    <title>Classificação de Criticidade do Chamado de Suporte</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -33,62 +33,87 @@
             display: none;
             font-weight: bold;
             color: #333;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
 
-    <h2>Avaliação de Impacto e Criticidade do Cliente</h2>
+    <h2>Classificação de Criticidade do Chamado de Suporte</h2>
     <div id="quiz">
         <!-- Pergunta 1 -->
         <div class="question active" id="question1">
             <p>Qual o nível de impacto que esse problema está causando ao cliente que reportou?</p>
-            <div class="option" onclick="nextQuestion('question2')">A) Problemas menores que não afetam as operações principais do cliente, como dúvidas ou questões de usabilidade.</div>
-            <div class="option" onclick="nextQuestion('question2')">B) Impacto parcial em uma funcionalidade importante, mas sem interromper o uso do produto principal.</div>
-            <div class="option" onclick="nextQuestion('question2')">C) Problemas que causam interrupções significativas em operações críticas, mas com soluções alternativas disponíveis.</div>
-            <div class="option" onclick="nextQuestion('question2')">D) Problemas que paralisam operações essenciais, afetando diretamente os resultados operacionais e financeiros do cliente.</div>
+            <div class="option" onclick="recordAnswer('A', 'question2')">A) Problemas menores que não afetam as operações principais do cliente.</div>
+            <div class="option" onclick="recordAnswer('B', 'question2')">B) Impacto parcial em uma funcionalidade importante.</div>
+            <div class="option" onclick="recordAnswer('C', 'question2')">C) Problemas que causam interrupções significativas em operações críticas.</div>
+            <div class="option" onclick="recordAnswer('D', 'question2')">D) Problemas que paralisam operações essenciais.</div>
         </div>
 
         <!-- Pergunta 2 -->
         <div class="question" id="question2">
             <p>Qual é a classificação da criticidade desse cliente para o negócio?</p>
-            <div class="option" onclick="nextQuestion('question3')">A) Clientes com valor contratual baixo, tiers 2 e 3.</div>
-            <div class="option" onclick="nextQuestion('question3')">B) Clientes com valor contratual médio, tier 1.</div>
-            <div class="option" onclick="nextQuestion('question3')">C) Clientes com alto valor contratual, tier 0.</div>
-            <div class="option" onclick="nextQuestion('question3')">D) Clientes de alto valor contratual e/ou clientes estratégicos, tier S.</div>
+            <div class="option" onclick="recordAnswer('A', 'question3')">A) Clientes com valor contratual baixo, tiers 2 e 3.</div>
+            <div class="option" onclick="recordAnswer('B', 'question3')">B) Clientes com valor contratual médio, tier 1.</div>
+            <div class="option" onclick="recordAnswer('C', 'question3')">C) Clientes com alto valor contratual, tier 0.</div>
+            <div class="option" onclick="recordAnswer('D', 'question3')">D) Clientes de alto valor contratual e/ou clientes estratégicos, tier S.</div>
         </div>
 
         <!-- Pergunta 3 -->
         <div class="question" id="question3">
             <p>O problema reportado pelo cliente afeta:</p>
-            <div class="option" onclick="showFinalMessage()">A) Apenas o cliente que reportou</div>
-            <div class="option" onclick="showFinalMessage()">B) Um grupo menor de clientes</div>
-            <div class="option" onclick="showFinalMessage()">C) A maioria dos clientes</div>
+            <div class="option" onclick="recordAnswer('A', 'final')">A) Apenas o cliente que reportou</div>
+            <div class="option" onclick="recordAnswer('B', 'final')">B) Um grupo menor de clientes</div>
+            <div class="option" onclick="recordAnswer('C', 'final')">C) A maioria dos clientes</div>
         </div>
 
         <!-- Mensagem Final -->
         <div class="final-message" id="finalMessage">
-            <p>Obrigado por responder ao questionário! Suas respostas foram registradas.</p>
+            <p id="finalResponse"></p>
         </div>
     </div>
 
     <script>
-        function nextQuestion(nextQuestionId) {
+        // Array para armazenar as respostas do usuário
+        const userAnswers = [];
+
+        function recordAnswer(answer, nextQuestionId) {
+            // Armazena a resposta do usuário
+            userAnswers.push(answer);
+
             // Esconde a pergunta atual
             const currentQuestion = document.querySelector('.question.active');
             currentQuestion.classList.remove('active');
 
-            // Mostra a próxima pergunta
-            const nextQuestion = document.getElementById(nextQuestionId);
-            nextQuestion.classList.add('active');
+            // Mostra a próxima pergunta ou exibe a mensagem final
+            if (nextQuestionId === 'final') {
+                displayFinalMessage();
+            } else {
+                const nextQuestion = document.getElementById(nextQuestionId);
+                nextQuestion.classList.add('active');
+            }
         }
 
-        function showFinalMessage() {
-            // Esconde a última pergunta
-            const currentQuestion = document.querySelector('.question.active');
-            currentQuestion.classList.remove('active');
+        function displayFinalMessage() {
+            // Lógica de orientação com base nas respostas
+            let message;
 
-            // Mostra a mensagem final
+            if (userAnswers.join('') === 'DDC') {
+                message = "Seguindo a matriz de classificação de chamados, seu ticket é considerado de prioridade crítica! Deve se encaminhar para sua liderança, acionar o procedimento de escalonamento de problemas críticos e de grande escala para os times responsáveis.";
+            } else if (userAnswers.join('') === 'CCC' || userAnswers.join('') === 'CCD') {
+                message = "Seu ticket é considerado de alta prioridade. Recomenda-se informar a liderança e acompanhar o problema de perto, mantendo o cliente atualizado.";
+            } else if (userAnswers.join('') === 'BBB' || userAnswers.join('') === 'BBC') {
+                message = "Esse chamado é considerado de prioridade média. Pode ser tratado pelo suporte regular, mas mantenha atenção e registre as ações tomadas.";
+            } else {
+                message = "O ticket é de prioridade baixa e não requer escalonamento imediato. Siga o procedimento padrão de resolução e informe o cliente dentro do SLA.";
+            }
+
+            // Exibe a mensagem final
+            document.getElementById('finalResponse').textContent = message;
             document.getElementById('finalMessage').style.display = 'block';
         }
     </script>
