@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questionário de Impacto e Criticidade do Cliente</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .question {
+            display: none;
+        }
+        .question.active {
+            display: block;
+        }
+        .option {
+            display: block;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .option:hover {
+            background-color: #e0e0e0;
+        }
+        .final-message {
+            display: none;
+            font-weight: bold;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Avaliação de Impacto e Criticidade do Cliente</h2>
+    <div id="quiz">
+        <!-- Pergunta 1 -->
+        <div class="question active" id="question1">
+            <p>Qual o nível de impacto que esse problema está causando ao cliente que reportou?</p>
+            <div class="option" onclick="nextQuestion('question2')">A) Problemas menores que não afetam as operações principais do cliente, como dúvidas ou questões de usabilidade.</div>
+            <div class="option" onclick="nextQuestion('question2')">B) Impacto parcial em uma funcionalidade importante, mas sem interromper o uso do produto principal.</div>
+            <div class="option" onclick="nextQuestion('question2')">C) Problemas que causam interrupções significativas em operações críticas, mas com soluções alternativas disponíveis.</div>
+            <div class="option" onclick="nextQuestion('question2')">D) Problemas que paralisam operações essenciais, afetando diretamente os resultados operacionais e financeiros do cliente.</div>
+        </div>
+
+        <!-- Pergunta 2 -->
+        <div class="question" id="question2">
+            <p>Qual é a classificação da criticidade desse cliente para o negócio?</p>
+            <div class="option" onclick="nextQuestion('question3')">A) Clientes com valor contratual baixo, tiers 2 e 3.</div>
+            <div class="option" onclick="nextQuestion('question3')">B) Clientes com valor contratual médio, tier 1.</div>
+            <div class="option" onclick="nextQuestion('question3')">C) Clientes com alto valor contratual, tier 0.</div>
+            <div class="option" onclick="nextQuestion('question3')">D) Clientes de alto valor contratual e/ou clientes estratégicos, tier S.</div>
+        </div>
+
+        <!-- Pergunta 3 -->
+        <div class="question" id="question3">
+            <p>O problema reportado pelo cliente afeta:</p>
+            <div class="option" onclick="showFinalMessage()">A) Apenas o cliente que reportou</div>
+            <div class="option" onclick="showFinalMessage()">B) Um grupo menor de clientes</div>
+            <div class="option" onclick="showFinalMessage()">C) A maioria dos clientes</div>
+        </div>
+
+        <!-- Mensagem Final -->
+        <div class="final-message" id="finalMessage">
+            <p>Obrigado por responder ao questionário! Suas respostas foram registradas.</p>
+        </div>
+    </div>
+
+    <script>
+        function nextQuestion(nextQuestionId) {
+            // Esconde a pergunta atual
+            const currentQuestion = document.querySelector('.question.active');
+            currentQuestion.classList.remove('active');
+
+            // Mostra a próxima pergunta
+            const nextQuestion = document.getElementById(nextQuestionId);
+            nextQuestion.classList.add('active');
+        }
+
+        function showFinalMessage() {
+            // Esconde a última pergunta
+            const currentQuestion = document.querySelector('.question.active');
+            currentQuestion.classList.remove('active');
+
+            // Mostra a mensagem final
+            document.getElementById('finalMessage').style.display = 'block';
+        }
+    </script>
+
+</body>
+</html>
